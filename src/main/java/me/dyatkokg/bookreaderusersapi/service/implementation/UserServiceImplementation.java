@@ -5,7 +5,9 @@ import me.dyatkokg.bookreaderusersapi.dto.LoginDTO;
 import me.dyatkokg.bookreaderusersapi.dto.RegisterDTO;
 import me.dyatkokg.bookreaderusersapi.dto.TokenDTO;
 import me.dyatkokg.bookreaderusersapi.entity.User;
+import me.dyatkokg.bookreaderusersapi.exception.PasswordInvalidException;
 import me.dyatkokg.bookreaderusersapi.exception.UserAlreadyExistException;
+import me.dyatkokg.bookreaderusersapi.exception.UserNotFoundException;
 import me.dyatkokg.bookreaderusersapi.repository.UserRepository;
 import me.dyatkokg.bookreaderusersapi.service.TokenProvider;
 import me.dyatkokg.bookreaderusersapi.service.UserService;
@@ -41,6 +43,12 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public TokenDTO login(LoginDTO login) {
-        return null;
+        User user = repository.findByEmail(login.getEmail()).orElseThrow(UserNotFoundException::new);
+        boolean isPasswordValid = passwordEncoder.matches(login.getPassword(), user.getPassword());
+        if (isPasswordValid) {
+            return provider.provideToken(user);
+        } else {
+            throw new PasswordInvalidException();
+        }
     }
 }
