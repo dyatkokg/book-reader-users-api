@@ -3,12 +3,12 @@ package me.dyatkokg.bookreaderusersapi.service.implementation;
 import lombok.RequiredArgsConstructor;
 import me.dyatkokg.bookreaderusersapi.dto.LoginDTO;
 import me.dyatkokg.bookreaderusersapi.dto.RegisterDTO;
-import me.dyatkokg.bookreaderusersapi.dto.TokenDTO;
 import me.dyatkokg.bookreaderusersapi.entity.User;
 import me.dyatkokg.bookreaderusersapi.exception.PasswordInvalidException;
 import me.dyatkokg.bookreaderusersapi.exception.UserAlreadyExistException;
 import me.dyatkokg.bookreaderusersapi.exception.UserNotFoundException;
 import me.dyatkokg.bookreaderusersapi.repository.UserRepository;
+
 import me.dyatkokg.bookreaderusersapi.service.TokenProvider;
 import me.dyatkokg.bookreaderusersapi.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,12 +41,12 @@ public class UserServiceImplementation implements UserService {
                 .build());
     }
 
-    @Override
-    public TokenDTO login(LoginDTO login) {
+
+    public String login(LoginDTO login) {
         User user = repository.findByEmail(login.getEmail()).orElseThrow(UserNotFoundException::new);
         boolean isPasswordValid = passwordEncoder.matches(login.getPassword(), user.getPassword());
         if (isPasswordValid) {
-            return provider.provideToken(user);
+            return provider.generateToken(user);
         } else {
             throw new PasswordInvalidException();
         }

@@ -3,7 +3,6 @@ package me.dyatkokg.bookreaderusersapi.controller;
 import lombok.RequiredArgsConstructor;
 import me.dyatkokg.bookreaderusersapi.dto.LoginDTO;
 import me.dyatkokg.bookreaderusersapi.dto.RegisterDTO;
-import me.dyatkokg.bookreaderusersapi.dto.TokenDTO;
 import me.dyatkokg.bookreaderusersapi.entity.User;
 import me.dyatkokg.bookreaderusersapi.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,7 @@ public class LoginController {
     }
 
     @PostMapping("login")
-    public TokenDTO login(@RequestBody LoginDTO login) {
+    public String login(@RequestBody LoginDTO login) {
         return service.login(login);
     }
 
